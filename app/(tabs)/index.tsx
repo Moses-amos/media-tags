@@ -1,19 +1,19 @@
-import { StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { MaterialIcons } from '@expo/vector-icons';
+import LogoImage from './shortle.jpg'
+
+const { width } = Dimensions.get('window');
 
 export default function TabOneScreen() {
   return (
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerText}>Instagram</Text>
+        <Image source={LogoImage} style={styles.logo} resizeMode="cover" />
         <View style={styles.headerIcons}>
           <TouchableOpacity>
             <MaterialIcons name="notifications-none" size={24} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <MaterialIcons name="chat-bubble-outline" size={24} color="black" />
           </TouchableOpacity>
         </View>
       </View>
@@ -37,29 +37,8 @@ export default function TabOneScreen() {
         ))}
       </ScrollView>
 
-      {/* Feed */}
-      <ScrollView style={styles.feed}>
-        <View style={styles.post}>
-          <View style={styles.postHeader}>
-            <View style={styles.postHeaderLeft}>
-              <View style={styles.smallProfilePic} />
-              <Text style={styles.username}>la fotografía artística</Text>
-            </View>
-            <TouchableOpacity>
-              <MaterialIcons name="more-vert" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
-          
-          {/* Grid of images */}
-          <View style={styles.imageGrid}>
-            <View style={styles.mainImage} />
-            <View style={styles.sideImages}>
-              <View style={styles.sideImage} />
-              <View style={styles.sideImage} />
-            </View>
-          </View>
-        </View>
-      </ScrollView>
+      {/* Profile Card */}
+
     </View>
   );
 }
@@ -68,14 +47,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: width > 600 ? '100%' : 'auto',
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 44,
+    paddingHorizontal: 0,
+    paddingTop: 25,
     paddingBottom: 8,
+    marginRight: 16,
   },
   headerText: {
     fontSize: 24,
@@ -166,5 +149,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#dedede',
     borderRadius: 4,
+  },
+  logo: {
+    width: 110,
+    height: 80,
+    borderRadius: 40,
+    marginRight: 120
   },
 });
