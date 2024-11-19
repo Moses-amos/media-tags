@@ -4,6 +4,7 @@ import { Tabs } from 'expo-router';
 import { View, Dimensions } from 'react-native';
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
+import Entypo from '@expo/vector-icons/Entypo';
 
 function TabBarIcon({ name, color, isActive }) {
   return (
@@ -15,7 +16,8 @@ function TabBarIcon({ name, color, isActive }) {
         alignItems: 'center',
       }}
     >
-      <FontAwesome name={name} size={24} color={color} />
+      <Entypo name={name} size={24} color={color} />
+      {/* <FontAwesome name={name} size={24} color={color} /> */}
     </View>
   );
 }

@@ -1,7 +1,7 @@
 import { StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { MaterialIcons } from '@expo/vector-icons';
-import LogoImage from './shortle.jpg'
+import LogoImage from './images/shortle.jpg'
 
 const { width } = Dimensions.get('window');
 
@@ -10,12 +10,13 @@ export default function TabOneScreen() {
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Image source={LogoImage} style={styles.logo} resizeMode="cover" />
         <View style={styles.headerIcons}>
           <TouchableOpacity>
             <MaterialIcons name="notifications-none" size={24} color="black" />
           </TouchableOpacity>
         </View>
+        <Image source={LogoImage} style={styles.logo} resizeMode="cover" />
+
       </View>
 
       {/* Stories */}
@@ -24,15 +25,15 @@ export default function TabOneScreen() {
           <View style={styles.addStoryButton}>
             <MaterialIcons name="add" size={24} color="black" />
           </View>
-          <Text style={styles.storyText}>Your story</Text>
+          <Text style={styles.storyText}>Add tag</Text>
         </View>
-        {/* Sample story items */}
-        {['JBL22', 'Mark', 'Hera'].map((name, index) => (
+        {/* Sample story items with social media icons */}
+        {['facebook', 'twitter', 'instagram'].map((platform, index) => (
           <View key={index} style={styles.storyItem}>
             <View style={styles.storyRing}>
-              <View style={styles.storyImage} />
+              {/* Use MaterialIcons for social media logos */}
+              <MaterialIcons name={platform} size={32} color="white" style={styles.iconCenter} />
             </View>
-            <Text style={styles.storyText}>{name}</Text>
           </View>
         ))}
       </ScrollView>
@@ -53,12 +54,12 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    width: '90%',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 0,
+    paddingHorizontal: 10,
     paddingTop: 25,
     paddingBottom: 8,
-    marginRight: 16,
   },
   headerText: {
     fontSize: 24,
@@ -89,9 +90,12 @@ const styles = StyleSheet.create({
     width: 68,
     height: 68,
     borderRadius: 34,
-    padding: 2,
-    backgroundColor: '#ff8501',
+    borderWidth: 2,
+    borderColor: 'gray',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 4,
+    overflow: 'hidden',
   },
   storyImage: {
     width: '100%',
@@ -154,6 +158,11 @@ const styles = StyleSheet.create({
     width: 110,
     height: 80,
     borderRadius: 40,
-    marginRight: 120
+  },
+  iconCenter: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -16 }, { translateY: -16 }], // Adjust based on icon size
   },
 });
