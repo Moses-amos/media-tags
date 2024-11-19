@@ -42,10 +42,16 @@ export default function TabOneScreen() {
             <Text style={styles.tagText}>Add tag</Text>
           </TouchableOpacity>
         </View>
+
+        {/* Render placeholders if no tags are added */}
+        {tags.length === 0 && (
+          <>
+            <View style={styles.placeholder} />
+            <View style={styles.placeholder} />
+          </>
+        )}
+
         {/* Render added tags */}
-        <View>
-          
-        </View>
         {tags.map((platform, index) => (
           <View key={index} style={styles.tagItem}>
             <View style={styles.tagRing}>
@@ -112,8 +118,8 @@ const styles = StyleSheet.create({
   },
   tagsContainer: {
     paddingVertical: 8,
-    paddingHorizontal: 0,
-    width: 300,
+    paddingHorizontal: 16,
+    width: 300, // Set to 100% to allow full width
   },
   tagItem: {
     alignItems: 'center',
@@ -244,5 +250,14 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     color: 'red',
+  },
+  placeholder: {
+    width: 64,
+    height: 64,
+    borderRadius: 20,
+    borderWidth: 3,
+    marginRight: 16,
+    borderColor: 'gray',
+    borderStyle: 'dotted', // Dotted border style
   },
 });
