@@ -1,11 +1,16 @@
-import { StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
-import { Text, View } from '@/components/Themed';
+import { StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions, Modal, TextInput, View } from 'react-native';
+import { Text } from '@/components/Themed';
 import { MaterialIcons } from '@expo/vector-icons';
 import LogoImage from './images/shortle.jpg'
+import React, { useState } from 'react';
+import { ButtonGroup } from '../../components/button-group';
 
 const { width } = Dimensions.get('window');
 
 export default function TabOneScreen() {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [tag, setTag] = useState('');
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -19,24 +24,50 @@ export default function TabOneScreen() {
 
       </View>
 
-      {/* Stories */}
-      <ScrollView horizontal style={styles.storiesContainer} showsHorizontalScrollIndicator={false}>
-        <View style={styles.storyItem}>
-          <View style={styles.addStoryButton}>
-            <MaterialIcons name="add" size={24} color="black" />
-          </View>
-          <Text style={styles.storyText}>Add tag</Text>
+      {/* tags */}
+      <ScrollView horizontal style={styles.tagsContainer} showsHorizontalScrollIndicator={false}>
+        <View style={styles.tagItem}>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <View style={styles.addtagButton}>
+              <MaterialIcons name="add" size={24} color="black" />
+            </View>
+            <Text style={styles.tagText}>Add tag</Text>
+          </TouchableOpacity>
         </View>
-        {/* Sample story items with social media icons */}
+        {/* Sample tag items with social media icons */}
         {['facebook', 'twitter', 'instagram'].map((platform, index) => (
-          <View key={index} style={styles.storyItem}>
-            <View style={styles.storyRing}>
+          <View key={index} style={styles.tagItem}>
+            <View style={styles.tagRing}>
               {/* Use MaterialIcons for social media logos */}
               <MaterialIcons name={platform} size={32} color="white" style={styles.iconCenter} />
             </View>
           </View>
         ))}
       </ScrollView>
+
+      {/* Modal for adding a tag */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalView}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Add Social Media Tag</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter tag (e.g., @username)"
+              value={tag}
+              onChangeText={setTag}
+            />
+            <ButtonGroup 
+              onSubmit={() => { /* Handle tag submission here */ setModalVisible(false); }} 
+              onCancel={() => setModalVisible(false)} 
+            />
+          </View>
+        </View>
+      </Modal>
 
       {/* Profile Card */}
 
@@ -69,15 +100,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 16,
   },
-  storiesContainer: {
+  tagsContainer: {
     paddingVertical: 8,
     paddingHorizontal: 16,
   },
-  storyItem: {
+  tagItem: {
     alignItems: 'center',
     marginRight: 16,
   },
-  addStoryButton: {
+  addtagButton: {
     width: 64,
     height: 64,
     borderRadius: 32,
@@ -86,7 +117,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 4,
   },
-  storyRing: {
+  tagRing: {
     width: 68,
     height: 68,
     borderRadius: 34,
@@ -97,14 +128,15 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     overflow: 'hidden',
   },
-  storyImage: {
+  tagImage: {
     width: '100%',
     height: '100%',
     borderRadius: 32,
     backgroundColor: '#dedede',
   },
-  storyText: {
+  tagText: {
     fontSize: 12,
+    textAlign: 'center',
   },
   feed: {
     flex: 1,
@@ -164,5 +196,42 @@ const styles = StyleSheet.create({
     top: '50%',
     left: '50%',
     transform: [{ translateX: -16 }, { translateY: -16 }], // Adjust based on icon size
+  },
+  modalView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '90%',
+    maxWidth: 400,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+    elevation: 5,
+    borderWidth: 1,
+    borderColor: '#d3d3d3',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  input: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  },
+  submitButton: {
+    color: 'blue',
+    marginBottom: 10,
+  },
+  closeButton: {
+    color: 'red',
   },
 });
