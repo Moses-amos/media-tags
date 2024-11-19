@@ -3,13 +3,21 @@ import { Text } from '@/components/Themed';
 import { MaterialIcons } from '@expo/vector-icons';
 import LogoImage from './images/shortle.jpg'
 import React, { useState } from 'react';
-import { ButtonGroup } from '../../components/button-group';
-
+import { ButtonGroup } from '../../components/button-group'; // Adjusted import path
 const { width } = Dimensions.get('window');
 
 export default function TabOneScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [tag, setTag] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
+
+  const handleAddTag = () => {
+    if (tag) {
+      setTags([...tags, tag]);
+      setTag('');
+      setModalVisible(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -24,21 +32,23 @@ export default function TabOneScreen() {
 
       </View>
 
-      {/* tags */}
-      <ScrollView horizontal style={styles.tagsContainer} showsHorizontalScrollIndicator={false}>
+      {/* Tags Container */}
+      <ScrollView horizontal style={styles.tagsContainer} showsHorizontalScrollIndicator={true}>
         <View style={styles.tagItem}>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
             <View style={styles.addtagButton}>
-              <MaterialIcons name="add" size={24} color="black" />
+              <MaterialIcons name="add" size={24} color="white" />
             </View>
             <Text style={styles.tagText}>Add tag</Text>
           </TouchableOpacity>
         </View>
-        {/* Sample tag items with social media icons */}
-        {['facebook', 'twitter', 'instagram'].map((platform, index) => (
+        {/* Render added tags */}
+        <View>
+          
+        </View>
+        {tags.map((platform, index) => (
           <View key={index} style={styles.tagItem}>
             <View style={styles.tagRing}>
-              {/* Use MaterialIcons for social media logos */}
               <MaterialIcons name={platform} size={32} color="white" style={styles.iconCenter} />
             </View>
           </View>
@@ -62,7 +72,7 @@ export default function TabOneScreen() {
               onChangeText={setTag}
             />
             <ButtonGroup 
-              onSubmit={() => { /* Handle tag submission here */ setModalVisible(false); }} 
+              onSubmit={handleAddTag}
               onCancel={() => setModalVisible(false)} 
             />
           </View>
@@ -102,7 +112,8 @@ const styles = StyleSheet.create({
   },
   tagsContainer: {
     paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingHorizontal: 0,
+    width: 300,
   },
   tagItem: {
     alignItems: 'center',
@@ -111,8 +122,8 @@ const styles = StyleSheet.create({
   addtagButton: {
     width: 64,
     height: 64,
-    borderRadius: 32,
-    backgroundColor: '#fafafa',
+    borderRadius: 20,
+    backgroundColor: '#26a69a',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 4,
@@ -120,7 +131,7 @@ const styles = StyleSheet.create({
   tagRing: {
     width: 68,
     height: 68,
-    borderRadius: 34,
+    borderRadius: 20,
     borderWidth: 2,
     borderColor: 'gray',
     justifyContent: 'center',
