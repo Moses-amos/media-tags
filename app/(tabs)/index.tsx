@@ -14,14 +14,16 @@ import SnapchatImage from './images/snapchat.png'; // Local import for Snapchat 
 import React, { useState } from 'react';
 import { ButtonGroup } from '../../components/button-group'; // Adjusted import path
 import { Card, CardContent } from '@/components/ui/card'; // Import Card and CardContent
+import { QRCodeSVG } from 'qrcode.react'; // Import QRCodeSVG
 
 const { width } = Dimensions.get('window');
 
 export default function TabOneScreen() {
   const [modalVisible, setModalVisible] = useState(false);
-  const [tag, setTag] = useState('');
+  const [tag, setTag] = useState('@');
   const [tags, setTags] = useState<{ name: string; image: any }[]>([]);
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
+  const [selectedTag, setSelectedTag] = useState<{ name: string; image: any; color: string } | null>(null); // Include color in selected tag
 
   const socialMediaLinks = [
     { name: 'Facebook', image: FacebookImage, url: 'https://facebook.com', color: '#1877F2' },
@@ -41,10 +43,14 @@ export default function TabOneScreen() {
       if (selectedSocial) {
         setTags([...tags, { name: tag, image: selectedSocial.image }]);
       }
-      setTag('');
+      setTag('@');
       setSelectedIcon(null);
       setModalVisible(false);
     }
+  };
+
+  const handleTagClick = (tag: { name: string; image: any; color: string }) => {
+    setSelectedTag(tag); // Set the selected tag for QR code display
   };
 
   const selectIcon = (name: string) => {
@@ -91,11 +97,13 @@ export default function TabOneScreen() {
               contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 5, paddingVertical: 2 }} // Add padding for better spacing
             >
               {tags.map((platform, index) => (
-                <View key={index} style={styles.tagItem}>
-                  <View style={styles.tagRing}>
-                    <Image source={platform.image} style={styles.tagImage} />
+                <TouchableOpacity key={index} onPress={() => handleTagClick(platform)}> {/* Handle tag click */}
+                  <View style={styles.tagItem}>
+                    <View style={styles.tagRing}>
+                      <Image source={platform.image} style={styles.tagImage} />
+                    </View>
                   </View>
-                </View>
+                </TouchableOpacity>
               ))}
             </ScrollView>
           </CardContent>
@@ -135,9 +143,9 @@ export default function TabOneScreen() {
 
             <TextInput
               style={styles.input}
-              placeholder="Enter tag (e.g., @username)"
+              placeholder="tag (e.g., @username)"
               value={tag}
-              onChangeText={setTag}
+              onChangeText={text => setTag(text.startsWith('@') ? text : `@${text}`)}
             />
             
             {/* Connect Button */}
@@ -156,6 +164,31 @@ export default function TabOneScreen() {
               onSubmit={handleAddTag}
               onCancel={() => setModalVisible(false)} 
             />
+          </View>
+        </View>
+      </Modal>
+
+      {/* Modal for displaying QR code */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={!!selectedTag} // Show modal if a tag is selected
+        onRequestClose={() => setSelectedTag(null)} // Close modal
+      >
+        <View style={styles.modalView}>
+          <View style={[styles.modalContent, { backgroundColor: selectedTag?.color || '#fff' }]}> {/* Set modal background color */}
+            <Text style={styles.modalTitle}>{selectedTag?.name}</Text>
+            <QRCodeSVG
+              value={selectedTag?.name} // Use the tag name for QR code
+              size={150}
+              bgColor={"#ffffff"} // Background color of the QR code
+              fgColor={selectedTag?.color || '#000000'} // Match QR code foreground color to the selected social media icon color
+              level={"L"}
+              includeMargin={false}
+            />
+            <TouchableOpacity onPress={() => setSelectedTag(null)} style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -304,14 +337,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
   },
   modalContent: {
-    width: '90%',
+    width: '80%', // Adjusted width for the modal
     maxWidth: 400,
     backgroundColor: 'white',
     borderRadius: 10,
-    padding: 30, // Increased padding for a longer modal
+    padding: 30,
     alignItems: 'center',
     elevation: 5,
     borderWidth: 1,
@@ -329,13 +362,23 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
+    marginTop: 5
   },
   submitButton: {
     color: 'blue',
     marginBottom: 10,
   },
   closeButton: {
-    color: 'red',
+    marginTop: 20,
+    backgroundColor: '#ff4d4d', // Example color for close button
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
   placeholder: {
     width: 64, // Set a standard width for the placeholder
