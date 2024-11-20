@@ -10,7 +10,7 @@ export function ButtonGroup({ onSubmit, onCancel }: ButtonGroupProps) {
   return (
     <View style={styles.buttonContainer}>
       <TouchableOpacity onPress={onSubmit} style={styles.submitButton}>
-        <Text style={styles.submitButtonText}>Submit</Text>
+        <Text style={styles.submitButtonText}>Save</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={onCancel} style={styles.cancelButton}>
         <Text style={styles.cancelButtonText}>Cancel</Text>
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 5,
+    marginTop: 10,
     gap: 16, // Space between buttons
     width: '100%',
   },

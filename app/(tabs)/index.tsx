@@ -10,6 +10,7 @@ import GithubImage from './images/github.png'; // Local import for GitHub image
 import YoutubeImage from './images/youtube.png'; // Local import for YouTube image
 import TikTokImage from './images/tiktok.png'; // Local import for TikTok image
 import PinterestImage from './images/pinterest.png'; // Local import for Pinterest image
+import SnapchatImage from './images/snapchat.png'; // Local import for Snapchat image
 import React, { useState } from 'react';
 import { ButtonGroup } from '../../components/button-group'; // Adjusted import path
 
@@ -30,6 +31,8 @@ export default function TabOneScreen() {
     { name: 'YouTube', image: YoutubeImage, url: 'https://youtube.com', color: '#FF0000' },
     { name: 'TikTok', image: TikTokImage, url: 'https://tiktok.com', color: '#000000' },
     { name: 'Pinterest', image: PinterestImage, url: 'https://pinterest.com', color: '#BD081C' },
+    { name: 'Snapchat', image: SnapchatImage, url: 'https://snapchat.com', color: '#FFFC00' }, // Added Snapchat
+
   ];
 
   const handleAddTag = () => {
@@ -93,6 +96,7 @@ export default function TabOneScreen() {
       >
         <View style={styles.modalView}>
           <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Tags</Text>
             {/* Social Media Icons at the top of the modal */}
             <View style={styles.iconGrid}>
               {socialMediaLinks.map((social) => (
@@ -120,6 +124,19 @@ export default function TabOneScreen() {
               value={tag}
               onChangeText={setTag}
             />
+            
+            {/* Connect Button */}
+            <TouchableOpacity 
+              style={styles.connectButton} 
+              onPress={() => {
+                handleAddTag(); // Call the function to add the tag
+                setModalVisible(false); // Close the modal
+              }}
+            >
+              <Text style={styles.connectButtonText}>
+                {selectedIcon ? `Connect ${selectedIcon}` : 'Connect'} {/* Dynamic button text */}
+              </Text>
+            </TouchableOpacity>
             <ButtonGroup 
               onSubmit={handleAddTag}
               onCancel={() => setModalVisible(false)} 
@@ -343,5 +360,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between', // Space between items
     paddingVertical: 16, // Equivalent to py-4
     paddingHorizontal: 8, // Adjust as needed for horizontal spacing
+  },
+  connectButton: {
+    backgroundColor: '#26a69a', // Button color
+    borderRadius: 8, // Rounded corners
+    paddingVertical: 12, // Vertical padding
+    paddingHorizontal: 20, // Horizontal padding
+    marginVertical: 10, // Margin for spacing
+    alignItems: 'center', // Center the text
+    width: '100%', // Full width
+    elevation: 3, // Shadow for Android
+    shadowColor: '#000', // Shadow color for iOS
+    shadowOffset: { width: 0, height: 2 }, // Shadow offset
+    shadowOpacity: 0.2, // Shadow opacity
+    shadowRadius: 4, // Shadow radius
+  },
+  connectButtonText: {
+    color: 'white', // Text color
+    fontSize: 16, // Font size
+    fontWeight: 'bold', // Bold text
   },
 });
