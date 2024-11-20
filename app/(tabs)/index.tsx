@@ -13,6 +13,7 @@ import PinterestImage from './images/pinterest.png'; // Local import for Pintere
 import SnapchatImage from './images/snapchat.png'; // Local import for Snapchat image
 import React, { useState } from 'react';
 import { ButtonGroup } from '../../components/button-group'; // Adjusted import path
+import { Card, CardContent } from '@/components/ui/card'; // Import Card and CardContent
 
 const { width } = Dimensions.get('window');
 
@@ -32,18 +33,17 @@ export default function TabOneScreen() {
     { name: 'TikTok', image: TikTokImage, url: 'https://tiktok.com', color: '#000000' },
     { name: 'Pinterest', image: PinterestImage, url: 'https://pinterest.com', color: '#BD081C' },
     { name: 'Snapchat', image: SnapchatImage, url: 'https://snapchat.com', color: '#FFFC00' }, // Added Snapchat
-
   ];
 
   const handleAddTag = () => {
     if (tag && selectedIcon) {
-        const selectedSocial = socialMediaLinks.find(social => social.name === selectedIcon);
-        if (selectedSocial) {
-            setTags([...tags, { name: tag, image: selectedSocial.image }]);
-        }
-        setTag('');
-        setSelectedIcon(null);
-        setModalVisible(false);
+      const selectedSocial = socialMediaLinks.find(social => social.name === selectedIcon);
+      if (selectedSocial) {
+        setTags([...tags, { name: tag, image: selectedSocial.image }]);
+      }
+      setTag('');
+      setSelectedIcon(null);
+      setModalVisible(false);
     }
   };
 
@@ -64,7 +64,7 @@ export default function TabOneScreen() {
       </View>
 
       {/* Tags Container */}
-      <ScrollView horizontal style={styles.tagsContainer} showsHorizontalScrollIndicator={true}>
+      <View style={styles.tagsContainer}>
         <View style={styles.tagItem}>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
             <View style={styles.addtagButton}>
@@ -82,15 +82,25 @@ export default function TabOneScreen() {
           </>
         )}
 
-        {/* Render added tags */}
-        {tags.map((platform, index) => (
-          <View key={index} style={styles.tagItem}>
-            <View style={styles.tagRing}>
-              <Image source={platform.image} style={styles.tagImage} />
-            </View>
-          </View>
-        ))}
-      </ScrollView>
+        {/* Render added tags in a Card */}
+        <Card style={styles.card}>
+          <CardContent>
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false} // Hide default scrollbar
+              contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 5, paddingVertical: 2 }} // Add padding for better spacing
+            >
+              {tags.map((platform, index) => (
+                <View key={index} style={styles.tagItem}>
+                  <View style={styles.tagRing}>
+                    <Image source={platform.image} style={styles.tagImage} />
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+          </CardContent>
+        </Card>
+      </View>
 
       {/* Modal for adding a tag */}
       <Modal
@@ -183,8 +193,17 @@ const styles = StyleSheet.create({
   tagsContainer: {
     flexDirection: 'row', // Use flex direction for horizontal scrolling
     paddingVertical: 8,
-    paddingHorizontal: 16,
-    width: '100%', // Set to 100% to allow full width
+    paddingHorizontal: 10,
+    width: 300, // Set to 100% to allow full width
+  },
+  card: {
+    borderRadius: 10,
+    overflow: 'hidden', // Ensure the card has rounded corners
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5, // For Android shadow
   },
   tagItem: {
     alignItems: 'center',
