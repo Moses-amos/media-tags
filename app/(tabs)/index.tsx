@@ -19,7 +19,7 @@ const { width } = Dimensions.get('window');
 export default function TabOneScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [tag, setTag] = useState('');
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<{ name: string; image: any }[]>([]);
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
 
   const socialMediaLinks = [
@@ -36,10 +36,14 @@ export default function TabOneScreen() {
   ];
 
   const handleAddTag = () => {
-    if (tag) {
-      setTags([...tags, tag]);
-      setTag('');
-      setModalVisible(false);
+    if (tag && selectedIcon) {
+        const selectedSocial = socialMediaLinks.find(social => social.name === selectedIcon);
+        if (selectedSocial) {
+            setTags([...tags, { name: tag, image: selectedSocial.image }]);
+        }
+        setTag('');
+        setSelectedIcon(null);
+        setModalVisible(false);
     }
   };
 
@@ -66,6 +70,7 @@ export default function TabOneScreen() {
             <View style={styles.addtagButton}>
               <MaterialIcons name="add" size={24} color="white" />
             </View>
+            <Text style={styles.tagText}>Add tag</Text>
           </TouchableOpacity>
         </View>
 
@@ -81,7 +86,7 @@ export default function TabOneScreen() {
         {tags.map((platform, index) => (
           <View key={index} style={styles.tagItem}>
             <View style={styles.tagRing}>
-              <MaterialIcons name={platform} size={32} color="white" style={styles.iconCenter} />
+              <Image source={platform.image} style={styles.tagImage} />
             </View>
           </View>
         ))}
@@ -195,21 +200,23 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   tagRing: {
-    width: 68,
-    height: 68,
+    width: 64,
+    height: 64,
     borderRadius: 20,
-    borderWidth: 2,
-    borderColor: 'gray',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 4,
     overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   tagImage: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 32,
-    backgroundColor: '#dedede',
+    width: 32, // Set the width for the icon image
+    height: 32, // Set the height for the icon image
+    resizeMode: 'contain', // Ensure the image scales properly
   },
   tagText: {
     fontSize: 12,
@@ -312,8 +319,8 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   placeholder: {
-    width: 68, // Set a standard width for the placeholder
-    height: 68, // Set a standard height for the placeholder
+    width: 64, // Set a standard width for the placeholder
+    height: 64, // Set a standard height for the placeholder
     borderWidth: 2,
     borderColor: 'gray',
     borderStyle: 'dotted', // Dotted border style

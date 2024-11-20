@@ -23,14 +23,14 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 10,
+    marginTop: 15,
     gap: 16, // Space between buttons
     width: '100%',
   },
   submitButton: {
     backgroundColor: '#26a69a',
     paddingVertical: 10,
-    paddingHorizontal: 24,
+    paddingHorizontal: 28,
     borderRadius: 5,
     alignItems: 'center',
     transitionDuration: '300ms',
