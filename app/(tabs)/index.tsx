@@ -1,15 +1,36 @@
 import { StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions, Modal, TextInput, View } from 'react-native';
 import { Text } from '@/components/Themed';
 import { MaterialIcons } from '@expo/vector-icons';
-import LogoImage from './images/shortle.jpg'
+import LogoImage from './images/shortle.jpg';
+import FacebookImage from './images/facebook.png'; // Local import for Facebook image
+import TwitterImage from './images/xlogo.png';   // Local import for Twitter image
+import InstagramImage from './images/instagram.png'; // Local import for Instagram image
+import LinkedinImage from './images/linkedIn.png'; // Local import for LinkedIn image
+import GithubImage from './images/github.png'; // Local import for GitHub image
+import YoutubeImage from './images/youtube.png'; // Local import for YouTube image
+import TikTokImage from './images/tiktok.png'; // Local import for TikTok image
+import PinterestImage from './images/pinterest.png'; // Local import for Pinterest image
 import React, { useState } from 'react';
 import { ButtonGroup } from '../../components/button-group'; // Adjusted import path
+
 const { width } = Dimensions.get('window');
 
 export default function TabOneScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [tag, setTag] = useState('');
   const [tags, setTags] = useState<string[]>([]);
+  const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
+
+  const socialMediaLinks = [
+    { name: 'Facebook', image: FacebookImage, url: 'https://facebook.com', color: '#1877F2' },
+    { name: 'Twitter', image: TwitterImage, url: 'https://twitter.com', color: '#1DA1F2' },
+    { name: 'Instagram', image: InstagramImage, url: 'https://instagram.com', color: '#E4405F' },
+    { name: 'LinkedIn', image: LinkedinImage, url: 'https://linkedin.com', color: '#0A66C2' },
+    { name: 'GitHub', image: GithubImage, url: 'https://github.com', color: '#181717' },
+    { name: 'YouTube', image: YoutubeImage, url: 'https://youtube.com', color: '#FF0000' },
+    { name: 'TikTok', image: TikTokImage, url: 'https://tiktok.com', color: '#000000' },
+    { name: 'Pinterest', image: PinterestImage, url: 'https://pinterest.com', color: '#BD081C' },
+  ];
 
   const handleAddTag = () => {
     if (tag) {
@@ -17,6 +38,10 @@ export default function TabOneScreen() {
       setTag('');
       setModalVisible(false);
     }
+  };
+
+  const selectIcon = (name: string) => {
+    setSelectedIcon(name === selectedIcon ? null : name);
   };
 
   return (
@@ -29,7 +54,6 @@ export default function TabOneScreen() {
           </TouchableOpacity>
         </View>
         <Image source={LogoImage} style={styles.logo} resizeMode="cover" />
-
       </View>
 
       {/* Tags Container */}
@@ -39,7 +63,6 @@ export default function TabOneScreen() {
             <View style={styles.addtagButton}>
               <MaterialIcons name="add" size={24} color="white" />
             </View>
-            <Text style={styles.tagText}>Add tag</Text>
           </TouchableOpacity>
         </View>
 
@@ -70,7 +93,27 @@ export default function TabOneScreen() {
       >
         <View style={styles.modalView}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Add Social Media Tag</Text>
+            {/* Social Media Icons at the top of the modal */}
+            <View style={styles.iconGrid}>
+              {socialMediaLinks.map((social) => (
+                <TouchableOpacity
+                  key={social.name}
+                  onPress={() => selectIcon(social.name)}
+                  style={[
+                    styles.iconButton,
+                    selectedIcon === social.name ? styles.iconSelected : styles.iconDefault,
+                  ]}
+                  aria-label={`Select ${social.name}`}
+                  aria-pressed={selectedIcon === social.name}
+                >
+                  <Image
+                    source={social.image} // Use the local image
+                    style={styles.iconImage} // Apply styles to the image
+                  />
+                </TouchableOpacity>
+              ))}
+            </View>
+
             <TextInput
               style={styles.input}
               placeholder="Enter tag (e.g., @username)"
@@ -86,7 +129,6 @@ export default function TabOneScreen() {
       </Modal>
 
       {/* Profile Card */}
-
     </View>
   );
 }
@@ -95,7 +137,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    justifyContent: 'center',
+    justifyContent: 'flex-start', // Align items at the start
     alignItems: 'center',
     width: width > 600 ? '100%' : 'auto',
   },
@@ -117,9 +159,10 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   tagsContainer: {
+    flexDirection: 'row', // Use flex direction for horizontal scrolling
     paddingVertical: 8,
     paddingHorizontal: 16,
-    width: 300, // Set to 100% to allow full width
+    width: '100%', // Set to 100% to allow full width
   },
   tagItem: {
     alignItems: 'center',
@@ -225,7 +268,7 @@ const styles = StyleSheet.create({
     maxWidth: 400,
     backgroundColor: 'white',
     borderRadius: 10,
-    padding: 20,
+    padding: 30, // Increased padding for a longer modal
     alignItems: 'center',
     elevation: 5,
     borderWidth: 1,
@@ -252,12 +295,53 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   placeholder: {
-    width: 64,
-    height: 64,
-    borderRadius: 20,
-    borderWidth: 3,
-    marginRight: 16,
+    width: 68, // Set a standard width for the placeholder
+    height: 68, // Set a standard height for the placeholder
+    borderWidth: 2,
     borderColor: 'gray',
     borderStyle: 'dotted', // Dotted border style
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  iconButton: {
+    width: 64, // Set the width for the icon button
+    height: 64, // Set the height for the icon button
+    borderRadius: 32, // Make it circular
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2, // Add border width
+    borderColor: 'transparent', // Default border color
+    margin: 5, // Add margin between buttons
+    shadowColor: '#000', // Shadow color
+    shadowOffset: { width: 0, height: 2 }, // Shadow offset
+    shadowOpacity: 0.25, // Shadow opacity
+    shadowRadius: 3.5, // Shadow radius
+    elevation: 5, // For Android shadow
+  },
+  iconSelected: {
+    borderColor: 'blue', // Change border color to blue when selected
+  },
+  iconDefault: {
+    // Default styles for unselected icons
+  },
+  iconImage: {
+    width: 32, // Set the width for the icon image
+    height: 32, // Set the height for the icon image
+  },
+  gridContainer: {
+    flexDirection: 'row', // Equivalent to grid layout
+    flexWrap: 'wrap', // Allow items to wrap to the next line
+    justifyContent: 'space-between', // Space between items
+    paddingVertical: 16, // Equivalent to py-4
+    paddingHorizontal: 8, // Adjust as needed for horizontal spacing
+  },
+  iconGrid: {
+    flexDirection: 'row', // Use flex direction for grid layout
+    flexWrap: 'wrap', // Allow items to wrap to the next line
+    justifyContent: 'space-between', // Space between items
+    paddingVertical: 16, // Equivalent to py-4
+    paddingHorizontal: 8, // Adjust as needed for horizontal spacing
   },
 });
