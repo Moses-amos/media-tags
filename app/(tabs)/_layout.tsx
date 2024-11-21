@@ -26,13 +26,13 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
   const screenWidth = Dimensions.get('window').width;
 
-  const tabBarWidth = screenWidth > 600 ? 250 : 200;
+  const tabBarWidth = screenWidth > 300 ? 150 : 100;
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         tabBarStyle: {
+          tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
           backgroundColor: 'transparent',
           borderTopWidth: 0,
           borderRadius: 20,
@@ -62,7 +62,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="two"
         options={{
           title: 'Profile',
@@ -70,7 +70,7 @@ export default function TabLayout() {
             <TabBarIcon name="user" color={color} isActive={focused} />
           ),
         }}
-      />
+      /> */}
       
     </Tabs>
   );

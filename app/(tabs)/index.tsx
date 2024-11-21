@@ -14,7 +14,9 @@ import SnapchatImage from './images/snapchat.png'; // Local import for Snapchat 
 import React, { useState } from 'react';
 import { ButtonGroup } from '../../components/button-group'; // Adjusted import path
 import { Card, CardContent } from '@/components/ui/card'; // Import Card and CardContent
-import { QRCodeSVG } from 'qrcode.react'; // Import QRCodeSVG
+import { QRCodeSVG } from 'qrcode.react'; // Import QRCodeSVG'
+// Add this near other imports
+
 
 const { width } = Dimensions.get('window');
 
@@ -194,6 +196,31 @@ export default function TabOneScreen() {
       </Modal>
 
       {/* Profile Card */}
+      {/* Profile Card */}
+<View style={styles.profileCardContainer}>
+  <View style={styles.profileCard}>
+    <View style={styles.profileImageContainer}>
+      <Image
+        source={require('./images/prof.jpeg')}
+        style={styles.profileImage}
+      />
+    </View>
+    <View style={styles.profileContent}>
+      <Text style={styles.profileName}>Moses. Gamaseb</Text>
+      <Text style={styles.profileBio}>Talk to me about Formula 1 ✨</Text>
+      <View style={styles.locationContainer}>
+        <MaterialIcons name="location-on" size={16} color="#666" />
+        <Text style={styles.locationText}>Walvis Bay, Namibia</Text>
+      </View>
+      {/* QR Code Button */}
+<TouchableOpacity
+  style={styles.qrButton}>
+  <MaterialIcons name="qr-code" size={24} color="white" />
+</TouchableOpacity>
+
+    </View>
+  </View>
+  </View>
     </View>
   );
 }
@@ -215,6 +242,30 @@ const styles = StyleSheet.create({
     paddingTop: 25,
     paddingBottom: 8,
   },
+  qrButton: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  backgroundColor: '#26a69a',
+  paddingVertical: 12,
+  paddingHorizontal: 20,
+  borderRadius: 25,
+  marginTop: 20,
+  shadowColor: '#000',
+  shadowOffset: {
+    width: 0,
+    height: 2,
+  },
+  shadowOpacity: 0.1,
+  shadowRadius: 3,
+  elevation: 2,
+},
+qrButtonText: {
+  color: 'white',
+  marginLeft: 8,
+  fontSize: 16,
+  fontWeight: '500',
+},
+
   headerText: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -448,5 +499,98 @@ const styles = StyleSheet.create({
     color: 'white', // Text color
     fontSize: 16, // Font size
     fontWeight: 'bold', // Bold text
+  },// Add to the existing styles object
+  profileCardContainer: {
+    padding: 16,
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 19,
+    flex: 1, // Add this to take up available space
+},
+  
+profileCard: {
+    backgroundColor: 'white',
+    borderRadius: 32,
+    padding: 24,
+    width: '90%',
+    maxWidth: 320,
+    alignItems: 'center',
+    justifyContent: 'center', // Add this
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.09,
+    shadowRadius: 50,
+    elevation: 5,
+},
+  
+  profileImageContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 64,
+    overflow: 'hidden',
+    marginBottom: 16,
   },
+  
+  profileImage: {
+    width: '100%',
+    height: '100%',
+  },
+  
+  profileContent: {
+    alignItems: 'center',
+    width: '100%',
+  },
+  
+  profileName: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 4,
+    textAlign: 'center',
+  },
+  
+  profileBio: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 4,
+    textAlign: 'center',
+  },
+  
+  profileEmoji: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 4,
+    textAlign: 'center',
+  },
+  
+  locationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 4,
+  },
+  
+  locationText: {
+    fontSize: 14,
+    color: '#666',
+    marginLeft: 4,
+  },
+  
+  divider: {
+    height: 1,
+    width: '100%',
+    backgroundColor: '#eee',
+    marginTop: 20,
+  },
+  
+  profileStatus: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'center',
+  }
+  
 });
+
+
