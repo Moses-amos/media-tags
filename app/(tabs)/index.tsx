@@ -32,6 +32,13 @@ const [selectedTag, setSelectedTag] = useState<{
   color: string; 
   qrData?: string 
 } | null>(null);
+const [isEditProfileModalVisible, setIsEditProfileModalVisible] = useState(false);
+const [profileData, setProfileData] = useState({
+  name: 'Moses. Gamaseb',
+  bio: 'Talk to me about Formula 1 ✨',
+  location: 'Walvis Bay, Namibia',
+  image: require('./images/prof.jpeg')
+});
 
   const socialMediaLinks = [
     { name: 'Facebook', image: FacebookImage, url: 'https://facebook.com', color: '#1877F2' },
@@ -180,10 +187,84 @@ const handleTagClick = (tag: { name: string; image: any; color: string }) => {
         </View>
       </Modal>
 
+      {/* Edit Profile Modal */}
+      <Modal
+  animationType="slide"
+  transparent={true}
+  visible={isEditProfileModalVisible}
+  onRequestClose={() => setIsEditProfileModalVisible(false)}
+>
+  <View style={styles.modalView}>
+    <View style={styles.modalContentEdit}>
+      <Text style={styles.modalTitleEdit}>Edit Profile</Text>
+
+      {/* Profile Picture Edit */}
+      <TouchableOpacity style={styles.profileImageEdit}>
+        <Image
+          source={profileData.image}
+          style={styles.editProfileImage}
+        />
+        <View style={styles.editImageOverlay}>
+          <MaterialIcons name="camera-alt" size={20} color="white" />
+        </View>
+      </TouchableOpacity>
+
+      {/* Name Input */}
+      <TextInput
+        style={styles.editInput}
+        placeholder="Name"
+        value={profileData.name}
+        onChangeText={(text) => setProfileData(prev => ({ ...prev, name: text }))}
+      />
+
+      {/* Bio Input */}
+      <TextInput
+        style={[styles.editInput, styles.bioInput]}
+        placeholder="Bio"
+        value={profileData.bio}
+        onChangeText={(text) => setProfileData(prev => ({ ...prev, bio: text }))}
+        multiline
+      />
+
+      {/* Location Input */}
+      <View style={styles.locationInputContainer}>
+        <MaterialIcons name="location-on" size={20} color="#666" />
+        <TextInput
+          style={[styles.editInput, styles.locationInput]}
+          placeholder="Location"
+          value={profileData.location}
+          onChangeText={(text) => setProfileData(prev => ({ ...prev, location: text }))}
+        />
+      </View>
+
+      {/* Save Button */}
+      <TouchableOpacity 
+        style={styles.saveButton}
+        onPress={() => setIsEditProfileModalVisible(false)}
+      >
+        <Text style={styles.saveButtonText}>Save Changes</Text>
+      </TouchableOpacity>
+
+      {/* Cancel Button */}
+      <TouchableOpacity 
+        style={styles.cancelButton}
+        onPress={() => setIsEditProfileModalVisible(false)}
+      >
+        <Text style={styles.cancelButtonText}>Cancel</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
+
       {/* Profile Card */}
-      {/* Profile Card */}
-<View style={styles.profileCardContainer}>
+      <View style={styles.profileCardContainer}>
   <View style={styles.profileCard}>
+     {/* Add settings icon at the top */}
+     <TouchableOpacity style={styles.settingsButton}
+       onPress={() => setIsEditProfileModalVisible(true)}
+>
+      <MaterialIcons name="settings" size={19} color="white" style={styles.settingsIcon} />
+    </TouchableOpacity>
     <View style={styles.profileImageContainer}>
       <Image
         source={require('./images/prof.jpeg')}
@@ -191,34 +272,29 @@ const handleTagClick = (tag: { name: string; image: any; color: string }) => {
       />
     </View>
     <View style={styles.profileContent}>
-      <Text style={styles.profileName}>Moses. Gamaseb</Text>
-      <Text style={styles.profileBio}>Talk to me about Formula 1 ✨</Text>
-      <View style={styles.locationContainer}>
-        <MaterialIcons name="location-on" size={16} color="#666" />
-        <Text style={styles.locationText}>Walvis Bay, Namibia</Text>
-      </View>
-      {/* QR Code Button */}
-{/* <TouchableOpacity
-  style={styles.qrButton}>
-  <MaterialIcons name="qr-code" size={24} color="white" />
-</TouchableOpacity> */}
-{/* QR Code Button */}
-<TouchableOpacity
-  style={styles.qrButton}
-  onPress={() => {
-    if (tags.length > 0) {
-      // If tags exist, show QR code for all tags
-      const tagsData = tags.map(tag => tag.name).join('\n');
-      setSelectedTag({ name: 'All tags', image: null, color: '#FF8C00', qrData: tagsData });
-    } else {
-      // If no tags, open add tag modal
-      setModalVisible(true);
-    }
-  }}>
-  <MaterialIcons name="qr-code" size={24} color="white" />
-</TouchableOpacity>
-
-{/* Modal for displaying QR code */}
+    <Text style={styles.profileName}>{profileData.name}</Text>
+  <Text style={styles.profileBio}>{profileData.bio}</Text>
+  <View style={styles.locationContainer}>
+    <MaterialIcons name="location-on" size={16} color="#666" />
+    <Text style={styles.locationText}>{profileData.location}</Text>
+  </View>
+      <TouchableOpacity
+        style={styles.qrButton}
+        onPress={() => {
+          if (tags.length > 0) {
+            // If tags exist, show QR code for all tags
+            const tagsData = tags.map(tag => tag.name).join('\n');
+            setSelectedTag({ name: 'All tags', image: null, color: '#FF8C00', qrData: tagsData });
+          } else {
+            // If no tags, open add tag modal
+            setModalVisible(true);
+          }
+        }}>
+        <MaterialIcons name="qr-code" size={24} color="white" />
+      </TouchableOpacity>
+    </View>
+  </View>
+</View>
 <Modal
   animationType="slide"
   transparent={true}
@@ -229,7 +305,7 @@ const handleTagClick = (tag: { name: string; image: any; color: string }) => {
     <View style={[styles.modalContentwo, { backgroundColor: selectedTag?.color || '#fff' }]}>
       <Text style={styles.modalTitle}>{selectedTag?.name}</Text>
       <QRCodeSVG
-        value={selectedTag?.qrData || selectedTag?.name || ''} // Use qrData if available
+        value={selectedTag?.qrData || selectedTag?.name || ''}
         size={150}
         bgColor={"#ffffff"}
         fgColor={selectedTag?.color || '#000000'}
@@ -241,12 +317,8 @@ const handleTagClick = (tag: { name: string; image: any; color: string }) => {
       </TouchableOpacity>
     </View>
   </View>
-</Modal>
+  </Modal>
 
-
-    </View>
-  </View>
-  </View>
     </View>
   );
 }
@@ -265,7 +337,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 10,
-    paddingTop: 25,
+    paddingTop: 15,
     paddingBottom: 8,
   },
   qrButton: {
@@ -302,7 +374,7 @@ qrButtonText: {
   },
   tagsContainer: {
     flexDirection: 'row', // Use flex direction for horizontal scrolling
-    paddingVertical: 8,
+    paddingVertical: 5,
     paddingHorizontal: 10,
     width: 300, // Set to 100% to allow full width
   },
@@ -318,6 +390,31 @@ qrButtonText: {
   tagItem: {
     alignItems: 'center',
     marginRight: 16,
+  },
+  settingsButton: {
+    position: 'absolute',
+    top: 16,
+    right: 20,
+    width: 30,
+    height: 30,
+    paddingLeft: 2,
+    paddingBottom: 2,
+    borderRadius: 18,
+    backgroundColor: '#26a69a',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 1,
+    zIndex: 1,
+  },
+  settingsIcon: {
+    // opacity: 0.8,
   },
   addtagButton: {
     width: 64,
@@ -426,6 +523,105 @@ qrButtonText: {
     elevation: 5,
     borderWidth: 1,
     borderColor: '#d3d3d3',
+  },
+  editInput: {
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
+    fontSize: 16,
+  },
+  
+  bioInput: {
+    height: 80,
+    textAlignVertical: 'top',
+  },
+  
+  locationInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: 16,
+  },
+  
+  locationInput: {
+    flex: 1,
+    marginLeft: 8,
+    marginBottom: 0,
+  },
+  
+  profileImageEdit: {
+    position: 'relative',
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+  },
+  
+  editProfileImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 50,
+  },
+  
+  editImageOverlay: {
+    position: 'absolute',
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#26a69a',
+    borderRadius: 15,
+    padding: 6,
+  },
+  
+  saveButton: {
+    backgroundColor: '#26a69a',
+    width: '100%',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  
+  saveButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  
+  cancelButton: {
+    backgroundColor: '#f5f5f5',
+    width: '100%',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  
+  cancelButtonText: {
+    color: '#666',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  modalContentEdit: {
+    width: '90%',
+    maxWidth: 400,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalTitleEdit: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
   modalContentwo: {
     width: '80%', // Adjusted width for the modal
@@ -538,7 +734,7 @@ qrButtonText: {
     padding: 16,
     width: '100%',
     alignItems: 'center',
-    marginTop: 19,
+    marginTop: 15,
     flex: 1, // Add this to take up available space
 },
   
@@ -557,7 +753,7 @@ profileCard: {
     },
     shadowOpacity: 0.09,
     shadowRadius: 50,
-    elevation: 5,
+    elevation: 3,
 },
   
   profileImageContainer: {
@@ -618,13 +814,8 @@ profileCard: {
     backgroundColor: '#eee',
     marginTop: 20,
   },
-  
   profileStatus: {
     fontSize: 12,
     color: '#666',
-    textAlign: 'center',
   }
-  
 });
-
-
