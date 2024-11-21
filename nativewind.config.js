@@ -1,4 +1,4 @@
 module.exports = {
-    output: "web", // or "web" depending on your target platform
+    output: "native", // or "web" depending on your target platform
   };
   
