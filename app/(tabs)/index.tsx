@@ -87,8 +87,16 @@ const [profileData, setProfileData] = useState({
     }
   };
 
+
 const handleTagClick = (tag: { name: string; image: any; color: string }) => {
   setSelectedTag({ ...tag, qrData: tag.name }); // Set the selected tag for QR code display
+};
+
+const handleRemoveSelectedTag = () => {
+  if (selectedTag) {
+    setTags(tags.filter(tag => tag.name !== selectedTag.name));
+    setSelectedTag(null);
+  }
 };
 
   // const handleTagClick = (tag: { name: string; image: any; color: string }) => {
@@ -462,8 +470,8 @@ qrButtonText: {
     elevation: 5,
   },
   tagImage: {
-    width: 32, // Set the width for the icon image
-    height: 32, // Set the height for the icon image
+    width: 38, // Set the width for the icon image
+    height: 38, // Set the height for the icon image
     resizeMode: 'contain', // Ensure the image scales properly
   },
   tagText: {
@@ -673,14 +681,14 @@ qrButtonText: {
   },
   closeButton: {
     marginTop: 20,
-    backgroundColor: '#ff4d4d', // Example color for close button
+    backgroundColor: '#e0e0e0', // Example color for close button
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
     borderRadius: 5,
     alignItems: 'center',
   },
   closeButtonText: {
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
   },
   placeholder: {
@@ -716,8 +724,9 @@ qrButtonText: {
     // Default styles for unselected icons
   },
   iconImage: {
-    width: 32, // Set the width for the icon image
-    height: 32, // Set the height for the icon image
+    width: 34, // Set the width for the icon image
+    height: 34, // Set the height for the icon image
+    resizeMode: 'contain',
   },
   gridContainer: {
     flexDirection: 'row', // Equivalent to grid layout
