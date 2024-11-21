@@ -25,7 +25,13 @@ export default function TabOneScreen() {
   const [tag, setTag] = useState('@');
   const [tags, setTags] = useState<{ name: string; image: any }[]>([]);
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
-  const [selectedTag, setSelectedTag] = useState<{ name: string; image: any; color: string } | null>(null); // Include color in selected tag
+  // const [selectedTag, setSelectedTag] = useState<{ name: string; image: any; color: string } | null>(null); // Include color in selected tag
+const [selectedTag, setSelectedTag] = useState<{ 
+  name: string; 
+  image: any; 
+  color: string; 
+  qrData?: string 
+} | null>(null);
 
   const socialMediaLinks = [
     { name: 'Facebook', image: FacebookImage, url: 'https://facebook.com', color: '#1877F2' },
@@ -51,9 +57,13 @@ export default function TabOneScreen() {
     }
   };
 
-  const handleTagClick = (tag: { name: string; image: any; color: string }) => {
-    setSelectedTag(tag); // Set the selected tag for QR code display
-  };
+const handleTagClick = (tag: { name: string; image: any; color: string }) => {
+  setSelectedTag({ ...tag, qrData: tag.name }); // Set the selected tag for QR code display
+};
+
+  // const handleTagClick = (tag: { name: string; image: any; color: string }) => {
+  //   setSelectedTag(tag); 
+  // };
 
   const selectIcon = (name: string) => {
     setSelectedIcon(name === selectedIcon ? null : name);
@@ -170,31 +180,6 @@ export default function TabOneScreen() {
         </View>
       </Modal>
 
-      {/* Modal for displaying QR code */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={!!selectedTag} // Show modal if a tag is selected
-        onRequestClose={() => setSelectedTag(null)} // Close modal
-      >
-        <View style={styles.modalView}>
-          <View style={[styles.modalContent, { backgroundColor: selectedTag?.color || '#fff' }]}> {/* Set modal background color */}
-            <Text style={styles.modalTitle}>{selectedTag?.name}</Text>
-            <QRCodeSVG
-              value={selectedTag?.name} // Use the tag name for QR code
-              size={150}
-              bgColor={"#ffffff"} // Background color of the QR code
-              fgColor={selectedTag?.color || '#000000'} // Match QR code foreground color to the selected social media icon color
-              level={"L"}
-              includeMargin={false}
-            />
-            <TouchableOpacity onPress={() => setSelectedTag(null)} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
       {/* Profile Card */}
       {/* Profile Card */}
 <View style={styles.profileCardContainer}>
@@ -213,10 +198,51 @@ export default function TabOneScreen() {
         <Text style={styles.locationText}>Walvis Bay, Namibia</Text>
       </View>
       {/* QR Code Button */}
-<TouchableOpacity
+{/* <TouchableOpacity
   style={styles.qrButton}>
   <MaterialIcons name="qr-code" size={24} color="white" />
+</TouchableOpacity> */}
+{/* QR Code Button */}
+<TouchableOpacity
+  style={styles.qrButton}
+  onPress={() => {
+    if (tags.length > 0) {
+      // If tags exist, show QR code for all tags
+      const tagsData = tags.map(tag => tag.name).join('\n');
+      setSelectedTag({ name: 'All tags', image: null, color: '#FF8C00', qrData: tagsData });
+    } else {
+      // If no tags, open add tag modal
+      setModalVisible(true);
+    }
+  }}>
+  <MaterialIcons name="qr-code" size={24} color="white" />
 </TouchableOpacity>
+
+{/* Modal for displaying QR code */}
+<Modal
+  animationType="slide"
+  transparent={true}
+  visible={!!selectedTag}
+  onRequestClose={() => setSelectedTag(null)}
+>
+  <View style={styles.modalView}>
+    <View style={[styles.modalContentwo, { backgroundColor: selectedTag?.color || '#fff' }]}>
+      <Text style={styles.modalTitle}>{selectedTag?.name}</Text>
+      <QRCodeSVG
+        value={selectedTag?.qrData || selectedTag?.name || ''} // Use qrData if available
+        size={150}
+        bgColor={"#ffffff"}
+        fgColor={selectedTag?.color || '#000000'}
+        level={"L"}
+        includeMargin={false}
+      />
+      <TouchableOpacity onPress={() => setSelectedTag(null)} style={styles.closeButton}>
+        <Text style={styles.closeButtonText}>Close</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
+
 
     </View>
   </View>
@@ -245,7 +271,7 @@ const styles = StyleSheet.create({
   qrButton: {
   flexDirection: 'row',
   alignItems: 'center',
-  backgroundColor: '#26a69a',
+  backgroundColor: 'orange',
   paddingVertical: 12,
   paddingHorizontal: 20,
   borderRadius: 25,
@@ -400,6 +426,14 @@ qrButtonText: {
     elevation: 5,
     borderWidth: 1,
     borderColor: '#d3d3d3',
+  },
+  modalContentwo: {
+    width: '80%', // Adjusted width for the modal
+    maxWidth: 400,
+    borderRadius: 40,
+    padding: 30,
+    alignItems: 'center',
+    elevation: 5,
   },
   modalTitle: {
     fontSize: 18,
