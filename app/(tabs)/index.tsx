@@ -15,8 +15,9 @@ import React, { useState } from 'react';
 import { ButtonGroup } from '../../components/button-group'; // Adjusted import path
 import { Card, CardContent } from '@/components/ui/card'; // Import Card and CardContent
 import { QRCodeSVG } from 'qrcode.react'; // Import QRCodeSVG'
-// Add this near other imports
+import * as ImagePicker from 'expo-image-picker'; // Import ImagePicker
 
+// Add this near other imports
 
 const { width } = Dimensions.get('window');
 
@@ -51,6 +52,28 @@ const [profileData, setProfileData] = useState({
     { name: 'Pinterest', image: PinterestImage, url: 'https://pinterest.com', color: '#BD081C' },
     { name: 'Snapchat', image: SnapchatImage, url: 'https://snapchat.com', color: '#FFFC00' }, // Added Snapchat
   ];
+
+  const pickImage = async () => {
+    // Request permission to access media library
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert('Permission to access camera roll is required!');
+      return;
+    }
+
+        // Launch image picker
+        const result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 1,
+        });
+    
+        if (!result.canceled) {
+          setProfileData(prev => ({ ...prev, image: { uri: result.assets[0].uri } })); // Update profile image
+        }
+      };
 
   const handleAddTag = () => {
     if (tag && selectedIcon) {
@@ -199,14 +222,14 @@ const handleTagClick = (tag: { name: string; image: any; color: string }) => {
       <Text style={styles.modalTitleEdit}>Edit Profile</Text>
 
       {/* Profile Picture Edit */}
-      <TouchableOpacity style={styles.profileImageEdit}>
-        <Image
-          source={profileData.image}
-          style={styles.editProfileImage}
-        />
-        <View style={styles.editImageOverlay}>
-          <MaterialIcons name="camera-alt" size={20} color="white" />
-        </View>
+      <TouchableOpacity style={styles.profileImageEdit} onPress={pickImage}>
+              <Image
+                source={profileData.image}
+                style={styles.editProfileImage}
+              />
+              <View style={styles.editImageOverlay}>
+                <MaterialIcons name="camera-alt" size={20} color="white" />
+              </View>
       </TouchableOpacity>
 
       {/* Name Input */}
@@ -259,7 +282,6 @@ const handleTagClick = (tag: { name: string; image: any; color: string }) => {
       {/* Profile Card */}
       <View style={styles.profileCardContainer}>
   <View style={styles.profileCard}>
-     {/* Add settings icon at the top */}
      <TouchableOpacity style={styles.settingsButton}
        onPress={() => setIsEditProfileModalVisible(true)}
 >
@@ -267,8 +289,8 @@ const handleTagClick = (tag: { name: string; image: any; color: string }) => {
     </TouchableOpacity>
     <View style={styles.profileImageContainer}>
       <Image
-        source={require('./images/prof.jpeg')}
-        style={styles.profileImage}
+              source={profileData.image} // Use updated profile image
+              style={styles.profileImage}
       />
     </View>
     <View style={styles.profileContent}>
@@ -397,7 +419,7 @@ qrButtonText: {
     right: 20,
     width: 30,
     height: 30,
-    paddingLeft: 2,
+    paddingLeft: 1,
     paddingBottom: 2,
     borderRadius: 18,
     backgroundColor: '#26a69a',
