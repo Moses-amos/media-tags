@@ -1,64 +1,81 @@
 import React from 'react';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
-import { View, Dimensions } from 'react-native';
+import { View, Dimensions, StyleSheet } from 'react-native';
 import Colors from '@/constants/Colors';
+import { Animated, ViewStyle  } from 'react-native';
 import { useColorScheme } from '@/components/useColorScheme';
-import Entypo from '@expo/vector-icons/Entypo';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { LinearGradient } from 'expo-linear-gradient';
 
 function TabBarIcon({ name, color, isActive }) {
   return (
-    <View
-      style={{
-        backgroundColor: 'transparent', // Changed from isActive ? 'lightblue' : 'transparent'
-        borderRadius: 30,
+    <Animated.View
+      style={[{
+        borderRadius: 16,
+        // borderColor: '#4db6ac',
+        // borderWidth: 2,
         padding: 10,
         alignItems: 'center',
-      }}
+        justifyContent: 'center',
+        transform: [{ scale: isActive ? 1.1 : 1 }],
+        shadowColor: '#4db6ac',
+        shadowOffset: { width: isActive ? -2 : -1, height: isActive ? 4 : 2 },
+        shadowOpacity: isActive ? 0.3 : 0.15,
+        shadowRadius: isActive ? 8 : 6,
+        elevation: isActive ? 4 : 2,
+        overflow: 'hidden',
+      }]}
     >
-      <Entypo name={name} size={24} color={color} />
-      {/* <FontAwesome name={name} size={24} color={color} /> */}
-    </View>
+      <LinearGradient
+        colors={isActive ? ['#26a69a', '#4db6ac'] : ['transparent', 'transparent']}
+        style={StyleSheet.absoluteFill}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      />
+      <AntDesign 
+        name={name} 
+        size={26} 
+        color={isActive ? '#fff' : '#4db6ac'} 
+        style={{
+          strokeWidth: 3,
+        } as ViewStyle}
+      />
+    </Animated.View>
   );
 }
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const screenWidth = Dimensions.get('window').width;
-
-  const tabBarWidth = screenWidth > 300 ? 150 : 100;
+  const windowWidth = Dimensions.get('window').width;
+  const tabBarWidth = windowWidth * 0.4; // 40% of screen width
 
   return (
     <Tabs
       screenOptions={{
         tabBarStyle: {
-          tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
           backgroundColor: 'transparent',
-          borderTopWidth: 0,
-          borderRadius: 20,
           position: 'absolute',
-          bottom: 20,
+          borderTopWidth: 0,
+          bottom: 10,
           left: '50%',
           transform: [{ translateX: -tabBarWidth / 2 }],
           width: tabBarWidth,
-          height: 60,
-          elevation: 10,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.25,
-          shadowRadius: 4,
+          paddingTop: 20,
+          height: 70,
           flexDirection: 'row',
-          justifyContent: 'space-around',
+          justifyContent: 'center',
           alignItems: 'center',
         },
+        tabBarShowLabel: false,
         headerShown: false,
       }}>
+
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'Scan',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name="home" color={color} isActive={focused} />
+            <TabBarIcon name="scan1" color={color} isActive={focused} />
           ),
         }}
       />
